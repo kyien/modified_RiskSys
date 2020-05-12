@@ -20,8 +20,19 @@ Route.get('/', () => {
   return { greeting: 'Hello world in JSON' }
 })
 
-Route.post('/login','ClientAuthController.login')
 
-Route.post('/register','ClientAuthController.register')
+//client routes
+Route.post('/client/login','ClientAuthController.login')
+Route.post('/client/logout','ClientAuthController.logout')
 
-Route.put('/update_profile/:id','ClientController.update').middleware('auth:client_jwt')
+Route.post('/client/register','ClientAuthController.register')
+
+Route.put('/client/update_profile/:id','ClientController.update').middleware('auth:client_jwt')
+
+//trader routes
+Route.post('/trader/login','TradersAuthController.login')
+Route.post('/trader/logout','TradersAuthController.logout')
+
+Route.post('/trader/register','TradersAuthController.register')
+
+Route.put('/trader/update_profile/:id','TraderController.update').middleware('auth:traders_jwt')

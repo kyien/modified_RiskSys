@@ -26,15 +26,27 @@ async login({request, auth, response}) {
       if (await auth.authenticator('client_jwt').attempt(email, password)) {
         let client = await Client.findBy('email', email)
         let accessToken = await auth.authenticator('client_jwt').generate(client)
-        return response.json({"user":client, "access_token": accessToken})
+        return response.json({"user":client, "access_token": accessToken,"code":200})
       }
 
-      return response.json({"message":'invalid email or password'})
+      return response.json({"message":'invalid email or password',"code":417})
 
     }
     catch (e) {
       return response.json({"message": 'You first need to register!'})
     }
+}
+
+async logout({request,auth,response}){
+
+  const token=request.input('token')
+  try{
+    await auth.authenticator('client_jwt').revokeTokens([token], true)
+    return response.json({"message":'successfully logged out',"code":200})
+
+  }catch(e){
+    return response.json({"message": 'failed logout!',"code":417})
+  }
 }
 
 
