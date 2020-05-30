@@ -1,3 +1,4 @@
+
 'use strict'
 
 /*
@@ -37,5 +38,3 @@ Route.post('/trader/register','TradersAuthController.register')
 
 Route.put('/trader/update_profile/:id','TraderController.update').middleware('auth:traders_jwt')
 Route.post('/trader/myfx','TraderController.checkuser')
-Route.post('/trader/myfx/history','TraderController.gethistory')
-Route.post('/test','TraderController.diff_months')

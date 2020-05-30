@@ -43,6 +43,11 @@ module.exports = {
     */
     allowMethodSpoofing: true,
 
+
+	/*allowing logging */
+
+	loggerEnv: ['development', 'production'],
+
     /*
     |--------------------------------------------------------------------------
     | Trust Proxy

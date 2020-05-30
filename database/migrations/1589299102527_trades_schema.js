@@ -11,8 +11,7 @@ class TradesSchema extends Schema {
       .onUpdate('CASCADE')
       .onDelete('SET NULL')
       table.json('signal_info')
-      table.json('market_data')
-      table.decimal('entry_price',10,2)
+       table.decimal('entry_price',10,2)
       table.timestamps()
     })
   }

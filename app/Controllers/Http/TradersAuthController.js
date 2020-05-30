@@ -1,3 +1,4 @@
+
 'use strict'
 
 const Trader = use('App/Models/Trader');
@@ -8,13 +9,23 @@ class TradersAuthController {
         const username = request.input("username")
         const email = request.input("email")
         const password = request.input("password")
+	const avatar='https://res.cloudinary.com/risksys20/image/upload/v1589297386/trader_avatars/blank_avatar3_jme31j.gif'
+	const winratio=request.input("win_ratio")
+	const lossratio=request.input("loss_ratio")
+	const profit_factor=request.input("profit_factor")
+	   
 
-        let trader = new Trader()
-        trader.username = username
-        trader.email = email
-        trader.password = password
+     let trader =await Trader.create({
 
-        await trader.save()
+	username:username,
+	avatar:avatar,
+        email:email ,
+        password : password,
+	win_ratio:winratio,
+	loss_ratio:lossratio,
+	profit_factor:profit_factor		
+	})
+
         let accessToken = await auth.authenticator('traders_jwt').generate(trader)
         return response.json({"user": trader, "access_token": accessToken})
 }

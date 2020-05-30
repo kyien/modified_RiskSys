@@ -39,6 +39,13 @@ class Trader extends Model {
   tokens () {
     return this.hasMany('App/Models/Token')
   }
+
+	trades(){
+
+	return this.hasMany('App/Models/Trade')
+	}
+
+
 }
 
 module.exports = Trader

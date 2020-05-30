@@ -8,13 +8,20 @@ class ClientAuthController {
         const username = request.input("username")
         const email = request.input("email")
         const password = request.input("password")
+        const avatar='https://res.cloudinary.com/risksys20/image/upload/v1589297386/trader_avatars/blank_avatar3_jme31j.gif'
 
-        let client = new Client()
-        client.username = username
-        client.email = email
-        client.password = password
+        let client = await  Client.create({
 
-        await client.save()
+	username: username,
+	avatar:avatar,
+        email: email,
+        password: password
+
+
+
+	})
+
+       // await client.save()
         let accessToken = await auth.authenticator('client_jwt').generate(client)
         return response.json({"user": client, "access_token": accessToken})
 }
