@@ -1,4 +1,3 @@
-
 'use strict'
 
 /*
@@ -40,29 +39,8 @@ Route.put('/trader/update_profile/:id','TraderController.update').middleware('au
 Route.post('/trader/myfx','TraderController.checkuser')
 Route.post('/trader/myfx/history','TraderController.gethistory')
 Route.post('/test','TraderController.diff_months')
+  
+  //Admin routes
 
-
-//admin routes
-
-
-Route.group(() => {
-
-	Route.post('/admin/register','AdminAuthController.register')
-	 Route.post('/admin/login','AdminAuthController.login')
-	 Route.post('/admin/logout','AdminAuthController.logout')
-	Route.put('/admin/update/profile/:id','AdminUserController.update').middleware('auth:admin_jwt')
-	Route.put('/admin/change/password/:id','AdminAuthController.change_password').middleware('auth:admin_jwt')
-	Route.post('/admin/test/mail','AdminUserController.test_mail')
-}).namespace('Admin')
-
-
-//payment routes
-Route.group(() => {
-
-Route.post('/payment/test','PaymentController.test_stk')
-Route.post('/payment/callback','PaymentController.stk_callback')
-Route.post('/payment/b2c','PaymentController.b2c_test')
-Route.post('/payment/time_out','PaymentController.b2c_timeout')
-Route.post('/payment/b2c_callback','PaymentController.b2c_callback')
-}).namespace('Payments')
-
+Route.post('/admin/reister','AdminAuthController.register')
+Route.pot('/admin/login','AdminAuthController.login')
