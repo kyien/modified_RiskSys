@@ -7,7 +7,7 @@ class ClientController {
 
     async update({params,request,reponse}){
         let client = Client.find(params.id)
-        const{username,email,avatar,password}= request.all()
+        const{username,email,password}= request.all()
         const avatar = request.file('avatar')
         try {
     const cloudinaryResponse = await CloudinaryService.v2.uploader.upload(file.tmpPath, {folder: 'client_avatars'});
@@ -24,6 +24,20 @@ class ClientController {
             return response.json({"error":'error udating profile'})
         }
       }
+
+	async check_mail({request,response}){
+
+		const{email}=request.only(['email']);
+		
+		const email_exists=await Client.findBy('email',email);
+
+		if(email_exists){
+
+		return response.send({'exists':true});
+		}
+
+		return response.send({'exists':false})
+	}
 }
 
 module.exports = ClientController

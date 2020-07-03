@@ -1,0 +1,129 @@
+'use strict'
+
+const Client = use('App/Models/Client');
+ const nodemailer = require('nodemailer');
+const moment = require('moment'); // moment (RUN NPM INSTALL MOMENT)
+const crypto = require('crypto'); // crypto
+
+class ClientAuthController {
+
+
+    async register({request, auth, response}) {
+        const username = request.input("username")
+        const email = request.input("email")
+        const password = request.input("password")
+        const avatar='https://res.cloudinary.com/risksys20/image/upload/v1589297386/trader_avatars/blank_avatar3_jme31j.gif'
+
+        let client = await  Client.create({
+
+	username: username,
+	avatar:avatar,
+        email: email,
+        password: password
+
+
+
+	})
+
+       // await client.save()
+        let accessToken = await auth.authenticator('client_jwt').generate(client)
+        return response.json({"user": client, "access_token": accessToken})
+}
+
+async login({request, auth, response}) {
+    const email = request.input("email")
+    const password = request.input("password");
+    try {
+      if (await auth.authenticator('client_jwt').attempt(email, password)) {
+        let client = await Client.findBy('email', email)
+        let accessToken = await auth.authenticator('client_jwt').generate(client)
+        return response.json({"user":client, "access_token": accessToken,"code":200})
+      }
+
+      return response.json({"message":'invalid email or password',"code":417})
+
+    }
+    catch (e) {
+      return response.json({"message": 'You first need to register!'})
+    }
+}
+
+async logout({request,auth,response}){
+
+  const token=request.input('token')
+  try{
+    await auth.authenticator('client_jwt').revokeTokens([token], true)
+    return response.json({"message":'successfully logged out',"code":200})
+
+  }catch(e){
+    return response.json({"message": 'failed logout!',"code":417})
+  }
+}
+
+async forgot_password({request,response}){
+
+	try {
+      // account request password recovery
+      const { email } = request.only(['email']);
+
+      // checking if email is registered
+      const client = await Client.findByOrFail('email', email);
+
+      // generating token
+      const token = await crypto.randomBytes(10).toString('hex');
+
+      // registering when token was created and saving token
+      client.token_created_at = new Date();
+      client.token = token;
+
+      // persisting data (saving)
+      await client.save();
+
+	 var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                         user: 'risksystem9@gmail.com',
+                         pass: '@Risksys20'
+                        }
+                                });
+
+	   const mailbody=`<h1>Password recovery request</h1>
+                <p>Hello {{ client.username }}, it seems someone requested a password recovery for your account
+                 registered with the email {{ client.email }}.
+                </p>
+                <p>
+  If it was you, just click this <a href="http://127.0.0.1:3000/client/forgotPassword/{{token}}/{{client.email}}">link</a>
+                </p>
+        <p>
+  If it wasn't you then we recommend you to change your password. Someone may
+  have had access to it.
+                </p>`;
+
+	const mailOptions = {
+         from: 'risksystem9@gmail.com', // sender address
+         to:email, // list of receivers
+         subject: 'Password Recovery', // Subject line
+         html:mailbody
+        };
+
+        await transporter.sendMail(mailOptions, function (err, info,response) {
+        if(err)
+    // console.log(err)
+  
+         return response.send(err)
+
+        else
+        // console.log(info);
+         return response.json({"status":200,"message":"email sent successfully","info":info})
+
+        });
+
+     // return user
+    } catch (err) {
+      console.log(err)
+    }	
+}
+
+}
+
+module.exports = ClientAuthController

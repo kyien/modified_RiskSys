@@ -1,6 +1,7 @@
 'use strict'
 const Logger = use('Logger');
 const Mpesa = require("mpesa-api").Mpesa;
+const Database = use('Database')
 
 class PaymentController {
 
@@ -10,7 +11,7 @@ async test_stk({request,response}){
 	try {
 
 
-	const {phone}=request.only(['phone'])
+	const {phone,amount}=request.only(['phone','amount'])
 
 	const credentials = {
     client_key: 'lJKCm77DSreze78TlW2ZVaoA9DSNp31n',
@@ -27,11 +28,11 @@ async test_stk({request,response}){
 	await    mpesa
   .lipaNaMpesaOnline({
     BusinessShortCode:287450,
-    Amount: 1 /* 1000 is an example amount */,
+    Amount: amount /* 1000 is an example amount */,
     PartyA:phone,
     PartyB:287450,
     PhoneNumber:phone,
-    CallBackURL: "https://node.sortika.com/hooks/mpesa",
+    CallBackURL: "https://node.sortika.com/client/hooks/mpesa",
     AccountReference:accountRef,
     passKey: "de5f48c37e649d3dd7956281187b06b397fcfce602b0739db80afd898634e7a6",
     TransactionType: "CustomerPayBillOnline" /* OPTIONAL */,
@@ -61,6 +62,20 @@ console.log(resp);
 	}
 }
 
+
+async query_amount({request,response}){
+		const{id}=request.only(['id'])
+
+	let amnt= await Database.select('Amount_paid').from('client_payments').where('MerchantRequestID',id);
+
+		if(!amnt){
+
+			return response.send({"status":400})		
+		}
+
+	return response.send({"info":amnt,"status":200})
+
+	}
 
 async stk_callback({request,response}){
 		console.log(request.all());

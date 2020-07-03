@@ -31,7 +31,7 @@ async test_stk({request,response}){
     PartyA:phone,
     PartyB:287450,
     PhoneNumber:phone,
-    CallBackURL: "https://node.sortika.com/hooks/mpesa",
+    CallBackURL: "https://node.sortika.com/trader/hooks/mpesa",
     AccountReference:accountRef,
     passKey: "de5f48c37e649d3dd7956281187b06b397fcfce602b0739db80afd898634e7a6",
     TransactionType: "CustomerPayBillOnline" /* OPTIONAL */,
