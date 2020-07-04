@@ -37,7 +37,7 @@ class ClientAuthController {
 	<h1>Email Verificaton</h1>
                 <p>Hello ${ client.username }.Welcome to Risksys wealth management platform.
                 </p>
-		<p>Click on this <a href="https://risksys.sortika.com/client/email/verify/${token}/${client.email}">link</a>
+		<p>Click on this <a href="http://127.0.0.1:3000/client/email/verify/${token}/${client.email}">link</a>
 		to complete the signup process.</p>
 
 		<p>Thank You.</p>
@@ -53,12 +53,12 @@ class ClientAuthController {
 
 	if(this.send_mail(mailOptions)){
 	
-        return response.json({"success": true, "message": "Verifiation link sent to your email"})
+        return response.status(201).json({"success": true, "message": "Verifiation link sent to your email"})
 	}
 
 	else{
 
-	return response.json({"success":false,"message":"Encountered an error sending email verification"})
+	return response.status(203).json({"success":false,"message":"Encountered an error sending email verification"})
 	}
 }
 
@@ -72,13 +72,14 @@ class ClientAuthController {
 
 		if(!sameToken){
 			 return response
-        .status(401)
+        .status(203)
         .send({"message": 'Invalid token provided'})
 
 		}
 
 		client.email_approved=true
-		
+		client.token=null
+
 		await client.save()
 
 		 return response.status(201).send({"success":true});
@@ -89,8 +90,6 @@ class ClientAuthController {
 		}catch(err){
 
 			console.log(err)
-
-			return response.send({"success":false,"message":"ecountered an error processing this request"})
 		}
 
 	}
@@ -141,21 +140,22 @@ async recover({request,response}){
 
 	const {token,email,new_password}=request.only(['email','token','new_password'])
 
+	console.log(token+' '+email)
 	 const client = await Client.findBy('email', email);
 
 	  const sameToken = token === client.token;
 
 	if (!sameToken) {
       return response
-        .status(401)
+        .status(203)
         .send({"message": 'Old token provided or token already used'})
     }
 
 
-const tokenExpired = moment().subtract(2, 'days').isAfter(user.token_created_at)
+	const tokenExpired = moment().subtract(2, 'days').isAfter(client.token_created_at)
 
    	 if (tokenExpired) {
-      		return response.status(401).send({"message":'Token expired'})
+      		return response.status(203).send({"message":'Token expired'})
     		}
 
 	 // saving new password
@@ -163,7 +163,7 @@ const tokenExpired = moment().subtract(2, 'days').isAfter(user.token_created_at)
 
 	 // deleting current token
     client.token = null
-    client.token_created_at = 0
+    //client.token_created_at = 0
 
     // persisting data (saving)
     await client.save()
@@ -202,20 +202,12 @@ async forgot_password({request,response}){
       await client.save();
 	
 
-	 var transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                         user: 'risksystem9@gmail.com',
-                         pass: '@Risksys20'
-                        }
-                                });
-
 	   const mailbody=`<h1>Password recovery request</h1>
                 <p>Hello ${ client.username }, it seems someone requested a password recovery for your account
                  registered with the email ${ client.email}.
                 </p>
                 <p>
-  If it was you, just click this <a href="https://risksys.sortika.com/password/recover/${user_type}/${token}/${client.email}">link</a>
+  If it was you, just click this <a href="http://127.0.0.1:3000/password/recover/${user_type}/${token}/${client.email}">link</a>
                 </p>
         <p>
   If it wasn't you then we recommend you to change your password. Someone may
@@ -227,30 +219,24 @@ async forgot_password({request,response}){
 	const mailOptions = {
          from: 'risksystem9@gmail.com', // sender address
          to:email, // list of receivers
-         subject: 'Password Change', // Subject line
+         subject: 'Lapasa de change', // Subject line
          html:mailbody
         };
 
-        await transporter.sendMail(mailOptions, function (err, info,response) {
-        if(err){
-     console.log(err)
-  
-    //     return response.status(500).json(err)
-	}
-        else{
-         console.log(info);
-      //return response.status(201).send({"message":"email sent successfully","info":info})
+	 if(!this.send_mail(mailOptions)){  
+    		  return response.status(203).send({"message":"error encountered during sending recovery link via email"})
+
 		}
-        });
+	
 	return response.status(201).send({"message":"email sent successfully"})
 	}
 	else{
-		return response.status(417).send({"message":"email does not exist"})
+		return response.status(203).send({"message":"sorry this email does not exist"})
 
 	}
      
     } catch (err) {
-      console.log(err)
+     console.log(err)
     }	
 }
 

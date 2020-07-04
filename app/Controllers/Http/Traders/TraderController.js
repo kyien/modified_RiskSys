@@ -139,6 +139,46 @@ class TraderController {
 					}
 
 				}
+
+
+
+
+
+
+		 async check_mail({request,response}){
+
+                const{email}=request.only(['email']);
+
+                const email_exists=await Trader.findBy('email',email);
+
+                if(email_exists){
+
+                return response.send({'exists':1});
+                }
+
+                return response.send({'exists':0})
+        }
+
+	async check_uname({request,response}){
+
+                const{username}=request.only(['username']);
+
+                const uname_exists=await Trader.findBy('username',username);
+
+                if(uname_exists){
+
+                return response.send({'exists':1});
+                }
+
+                return response.send({'exists':0})
+        }
+
+
+
+
+
+
+
 }
 
 module.exports = TraderController

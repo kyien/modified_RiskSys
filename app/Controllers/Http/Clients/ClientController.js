@@ -33,11 +33,25 @@ class ClientController {
 
 		if(email_exists){
 
-		return response.send({'exists':true});
+		return response.send({'exists':1});
 		}
 
-		return response.send({'exists':false})
+		return response.send({'exists':0})
 	}
+
+	     async check_uname({request,response}){
+
+                const{username}=request.only(['username']);
+
+                const uname_exists=await Client.findBy('username',username);
+
+                if(uname_exists){
+
+                return response.send({'exists':1});
+                }
+
+                return response.send({'exists':0})
+        }
 }
 
 module.exports = ClientController

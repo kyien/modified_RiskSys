@@ -33,6 +33,7 @@ Route.post('/client/register','ClientAuthController.register').validator('Client
 
 Route.put('/client/update_profile/:id','ClientController.update').middleware('auth:client_jwt')
 Route.post('/client/check_mail','ClientController.check_mail')
+Route.post('/client/check_uname','ClientController.check_uname')
 Route.post('client/forgot_password','ClientAuthController.forgot_password')
 Route.post('client/recover_password','ClientAuthController.recover')
 Route.post('client/email/verify','ClientAuthController.verify_email')
@@ -51,6 +52,10 @@ Route.group(() => {
 
 Route.post('/trader/login','TradersAuthController.login')
 Route.post('/trader/logout','TradersAuthController.logout')
+Route.post('trader/forgot_password','TradersAuthController.forgot_password')
+Route.post('trader/recover_password','TradersAuthController.recover')
+Route.post('/trader/check_mail','TraderController.check_mail')
+Route.post('/trader/check_uname','TraderController.check_uname')
 
 Route.post('/trader/register','TradersAuthController.register')
 
