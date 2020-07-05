@@ -37,7 +37,7 @@ class ClientAuthController {
 	<h1>Email Verificaton</h1>
                 <p>Hello ${ client.username }.Welcome to Risksys wealth management platform.
                 </p>
-		<p>Click on this <a href="http://127.0.0.1:3000/client/email/verify/${token}/${client.email}">link</a>
+		<p>Click on this <a href="http://risksys.sortika.com/client/email/verify/${token}/${client.email}">link</a>
 		to complete the signup process.</p>
 
 		<p>Thank You.</p>
@@ -100,6 +100,7 @@ async login({request, auth, response}) {
     const email = request.input("email")
     const password = request.input("password");
 
+//console.log(request.connection.)
       if (await auth.authenticator('client_jwt').attempt(email, password)) {
         let client = await Client.findBy('email', email)
 	if(!client.email_approved){
@@ -108,6 +109,7 @@ async login({request, auth, response}) {
 	} 
 
        let accessToken = await auth.authenticator('client_jwt').generate(client)
+	
         return response.status(201).json({"user":client, "access_token": accessToken})
       }
 //	else{
@@ -207,7 +209,7 @@ async forgot_password({request,response}){
                  registered with the email ${ client.email}.
                 </p>
                 <p>
-  If it was you, just click this <a href="http://127.0.0.1:3000/password/recover/${user_type}/${token}/${client.email}">link</a>
+  If it was you, just click this <a href="https://risksys.sortika.com/password/recover/${user_type}/${token}/${client.email}">link</a>
                 </p>
         <p>
   If it wasn't you then we recommend you to change your password. Someone may
@@ -219,7 +221,7 @@ async forgot_password({request,response}){
 	const mailOptions = {
          from: 'risksystem9@gmail.com', // sender address
          to:email, // list of receivers
-         subject: 'Lapasa de change', // Subject line
+         subject: 'Password Change Request', // Subject line
          html:mailbody
         };
 

@@ -17,6 +17,9 @@ class Client extends Model {
             clientInstance.password = await Hash.make(clientInstance.password)
           }
         })
+	
+	//	    this.addTrait('@provider:Auditable')
+
       }
 
       static get primaryKey () {

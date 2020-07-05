@@ -17,6 +17,9 @@ class Trader extends Model {
             traderInstance.password = await Hash.make(traderInstance.password)
           }
         })
+	
+	 //   this.addTrait('@provider:Auditable')
+
       }
 
       static get primaryKey () {
