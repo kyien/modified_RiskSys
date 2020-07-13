@@ -64,76 +64,11 @@ Route.post('client/payments/reports','PaymentController.get_transactions')
 }).namespace('Clients')
 
 
-//trader routes
-Route.group(() => {
-
-Route.post('/trader/login','TradersAuthController.login')
-Route.post('/trader/logout','TradersAuthController.logout')
-Route.post('trader/forgot_password','TradersAuthController.forgot_password')
-Route.post('trader/recover_password','TradersAuthController.recover')
-Route.post('/trader/check_mail','TraderController.check_mail')
-Route.post('/trader/check_uname','TraderController.check_uname')
-
-Route.post('/trader/register','TradersAuthController.register')
-Route.post('/trader/documents/verify','TraderController.trader_verify')
-Route.post('/trader/update_profile','TraderController.update').middleware('auth:traders_jwt')
-Route.post('/trader/myfx','TraderController.checkuser')
-Route.post('/trader/myfx/history','TraderController.gethistory')
-Route.post('/test','TraderController.diff_months')
-
-
-	      //payment routes
-        
-Route.post('trader/payment/test','PaymentController.test_stk')  //initiate stk push
-Route.post('trader/payment/b2c','PaymentController.b2c_test') //b2c initiate
-Route.post('trader/deposit','PaymentController.deposit')
-Route.post('trader/withdraw','PaymentController.withdraw')
-Route.post('trader/balance','PaymentController.get_balance')
-Route.post('trader/payments/reports','PaymentController.get_transactions')
-}).namespace('Traders')
-
-//admin routes
-
-
-Route.group(() => {
-
-	Route.post('/admin/register','AdminAuthController.register')
-	 Route.post('/admin/login','AdminAuthController.login')
-	 Route.post('/admin/logout','AdminAuthController.logout')
-	Route.put('/admin/update/profile/:id','AdminUserController.update').middleware('auth:admin_jwt')
-	Route.put('/admin/change/password/:id','AdminAuthController.change_password').middleware('auth:admin_jwt')
-	Route.delete('/admin/user/delete','AdminUserController.Delete_user').middleware('auth:admin_jwt')
-	Route.get('/admin/users','AdminUserController.get_users').middleware('auth:admin_jwt')
-	 Route.post('/admin/create/user','AdminUserController.create_user').middleware('auth:admin_jwt')
-	Route.post('/admin/test/mail','AdminUserController.test_mail')
-
-	//investment routes
-	Route.resource('admin/investment','InvestmentCategoryController').except(['show','create','edit'])
-
-	//Risk routes
-	Route.resource('admin/risk',' RiskController').only(['index','store','destroy'])
-
-}).namespace('Admin')
 
 
 
 
-//payment routes
-Route.group(() => {
 
-Route.post('/payment/test','PaymentController.test_stk')  //initiate stk push
-Route.post('/payment/callback','PaymentController.stk_callback') //stk callback
-Route.post('/payment/b2c','PaymentController.b2c_test') //b2c initiate
-Route.post('/payment/time_out','PaymentController.b2c_timeout') //b2c timeout
-Route.post('/payment/b2c_callback','PaymentController.b2c_callback') //b2c callback
 
-}).namespace('Payments')
 
- ///Testing routes
-Route.group(() => {
-
-Route.post('/test/email','EmailTestController.test_email')
-Route.post('/test/mailer','EmailTestController.test_node_mailer')
-
-}).namespace('Tests')
 
