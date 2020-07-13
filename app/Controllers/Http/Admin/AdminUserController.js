@@ -62,7 +62,37 @@ async create_user({request,response}){
 		
 	       // let accessToken = await auth.authenticator('admin_jwt').generate(user)
 
-		 return response.status(201).send({"info":user,"status":200})
+		 const mailbody=`<h1>Risksys Admin Login Credentials</h1>
+                <p>Hello ${user.username}.Kindly use these credentials to login as a <strong> ${user.role} </strong>.
+                </p>
+                <p>
+			<ul>
+			<li>Email:${user.email}</li>
+			<li>password:${password}</li>
+			</ul>
+
+		</p>
+`;
+
+		const mailOptions = {
+         from: 'risksystem9@gmail.com', // sender address
+         to:user.email, // list of receivers
+         subject: 'Login Credentials', // Subject line
+         html:mailbody
+        };
+
+		 if(this.send_mail(mailOptions)){
+
+        return response.status(201).json({"success": true, "message": "Verifiation link sent to your email","info":user})
+        }
+
+        else{
+
+        return response.status(203).json({"success":false,"message":"Encountered an error sending email verification"})
+        }
+
+
+		 //return response.status(201).send({"info":user,"status":200})
 
 	}
 
@@ -116,6 +146,31 @@ async Delete_user({request,response}){
 
         return response.send({"status":200})  
 }
+
+async send_mail(mailOptions){
+
+         var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                         user: 'risksystem9@gmail.com',
+                         pass: '@Risksys20'
+                        }
+                                });
+
+         await transporter.sendMail(mailOptions, function (err, info,response) {
+        if(err){
+     console.log(err)
+  
+         return false
+        }
+        else{
+         console.log(info);
+         return true
+                }
+        });
+
+}
+
 
 }
 

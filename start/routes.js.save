@@ -37,29 +37,12 @@ Route.post('/client/check_uname','ClientController.check_uname')
 Route.post('client/forgot_password','ClientAuthController.forgot_password')
 Route.post('client/recover_password','ClientAuthController.recover')
 Route.post('client/email/verify','ClientAuthController.verify_email')
-Route.post('/client/documents/verify','ClientController.client_verify')
-
-	//Reports
-Route.post('client/report/mamm','ReportController.get_mamm')
-Route.post('client/report/pamm','ReportController.get_pamm')
-Route.post('Client/report/hedge','ReportController.get_hedge')
-
-
-
-	//investment routes
-Route.post('client/invest/mamm','ClientController.mamm')
-Route.post('client/invest/pamm','ClientController.pamm')
-Route.post('Client/invest/hedge','ClientController.hedge')
 
 	//payment routes
 	
 Route.post('client/payment/test','PaymentController.test_stk')  //initiate stk push
 Route.post('client/payment/b2c','PaymentController.b2c_test') //b2c initiate
 Route.post('client/payment/query','PaymentController.query_amount')
-Route.post('client/deposit','PaymentController.deposit')
-Route.post('client/withdraw','PaymentController.withdraw')
-Route.post('client/balance','PaymentController.get_balance')
-Route.post('client/payments/reports','PaymentController.get_transactions')
 
 }).namespace('Clients')
 
@@ -75,8 +58,8 @@ Route.post('/trader/check_mail','TraderController.check_mail')
 Route.post('/trader/check_uname','TraderController.check_uname')
 
 Route.post('/trader/register','TradersAuthController.register')
-Route.post('/trader/documents/verify','TraderController.trader_verify')
-Route.post('/trader/update_profile','TraderController.update').middleware('auth:traders_jwt')
+
+Route.put('/trader/update_profile/:id','TraderController.update').middleware('auth:traders_jwt')
 Route.post('/trader/myfx','TraderController.checkuser')
 Route.post('/trader/myfx/history','TraderController.gethistory')
 Route.post('/test','TraderController.diff_months')
@@ -88,7 +71,6 @@ Route.post('trader/payment/test','PaymentController.test_stk')  //initiate stk p
 Route.post('trader/payment/b2c','PaymentController.b2c_test') //b2c initiate
 Route.post('trader/deposit','PaymentController.deposit')
 Route.post('trader/withdraw','PaymentController.withdraw')
-Route.post('trader/balance','PaymentController.get_balance')
 Route.post('trader/payments/reports','PaymentController.get_transactions')
 }).namespace('Traders')
 

@@ -47,7 +47,7 @@ async login({request, auth, response}) {
 
     }
     catch (e) {
-      return response.json({"message": 'You first need to register!'})
+      return response.json({"message": 'You first need to register!',"code":412})
     }
 }
 
@@ -200,7 +200,6 @@ async send_mail(mailOptions){
         });
 
 }
-
 
 }
 

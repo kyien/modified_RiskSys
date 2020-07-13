@@ -37,7 +37,7 @@ class ClientAuthController {
 	<h1>Email Verificaton</h1>
                 <p>Hello ${ client.username }.Welcome to Risksys wealth management platform.
                 </p>
-		<p>Click on this <a href="http://risksys.sortika.com/client/email/verify/${token}/${client.email}">link</a>
+		<p>Click on this <a href="https://risksys.sortika.com/client/email/verify/${token}/${client.email}">link</a>
 		to complete the signup process.</p>
 
 		<p>Thank You.</p>
